@@ -9,8 +9,8 @@ import numpy as np
 
 #Biblioteke vezane za neuronsku mrezu
 from keras.models import Sequential
-from keras.layers.core import Dense, Activation
-from keras.optimizers import SGD
+from keras.layers.core import Dense,Dropout, Activation
+
 
 
 
@@ -27,8 +27,8 @@ def pripremi_ulaz_za_neuronsku_mrezu(slike):
     #Funkcija koja skalira i pretvara element svakog buduceg ulaza u neuronsku mrezu
     ulazi_u_neuronsku = []
     for slika in slike:
-        skalirana_slika = skaliraj_sliku(slika)
-        ulazi_u_neuronsku.append(matrica_u_vektor(skalirana_slika))
+        obradjena_slika = skaliraj_sliku(slika)
+        ulazi_u_neuronsku.append(obradjena_slika)
 
     return ulazi_u_neuronsku
 
@@ -41,36 +41,53 @@ def pripremi_izlaz_za_neurosnku_mrezu(labele):
     zeljeni_izlazi = []
     for labela in labele:
         izlaz = np.zeros(10)
-        izlaz[labela-1] = 1
+        izlaz[labela] = 1
         zeljeni_izlazi.append(izlaz)
+
+
 
     return np.array(zeljeni_izlazi)
 
 
 def kreiraj_neuronsku():
-    # kreirace se neuronska mreza sa 784 ulaza, 10 izlaza i sa medjuslojem od 128 ulaza
+    # kreirace se neuronska mreza sa 784 ulaza, 10 izlaza i sa 3 medjusloja od 256 ulaza
     print("Kreira neuronsku")
-    ann = Sequential()
-    ann.add(Dense(128, input_dim=784, activation='sigmoid'))
-    ann.add(Dense(10, activation='sigmoid'))
-    return ann
+    model = Sequential()
+    model.add(Dense(256, input_shape=(784,)))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.2))
+
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.2))
+
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.2))
+
+    model.add(Dense(10))
+    model.add(Activation('softmax'))
+
+    return model
 
 def obuci_neuronsku(ann, x_train, y_train):
     # Obucavanje neuronske mreze
 
     # prebacivanje podataka u float32
-
     print("Obucava neuronsku")
     x_train = np.array(x_train, np.float32)
     y_train = np.array(y_train, np.float32)
 
     #definisemo parametre za obucavanje
-    sgd = SGD(lr=0.01, momentum = 0.9)
-    ann.compile(loss='mean_squared_error',optimizer=sgd)
+    ann.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
 
+    print("Krece obucavanje")
     #konkretno obucavanje neurosnke mreze
     #napomena: mensanje je stavljeno na false, posto su test skupovi inicijalno vec promesani
-    ann.fit(x_train, y_train, epochs=2000, batch_size=1, verbose=0, shuffle=False)
+    ann.fit(x_train, y_train, epochs=10, batch_size=128, verbose=1, shuffle=False)
+
+    ann.save('obucenaNeuronska1.h5')
+
 
     return ann
 
