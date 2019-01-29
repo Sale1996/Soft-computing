@@ -15,6 +15,7 @@ from keras.layers.core import Dense,Dropout, Activation
 #Omogucava nam euklitsko rastojanje da nadjemo
 from scipy.spatial import distance
 
+from PIL import Image
 
 
 
@@ -203,11 +204,14 @@ def pronadji_temena_hog(slika):
 
 #Funkcija sa vezbi 2 koja pronalazi regione
 def select_roi(image_orig, image_bin):
-    '''Oznaciti regione od interesa na originalnoj slici. (ROI = regions of interest)
+    '''
+        Oznaciti regione od interesa na originalnoj slici. (ROI = regions of interest)
         Za svaki region napraviti posebnu sliku dimenzija 28 x 28.
         Za označavanje regiona koristiti metodu cv2.boundingRect(contour).
         Kao povratnu vrednost vratiti originalnu sliku na kojoj su obeleženi regioni
         i niz slika koje predstavljaju regione sortirane po rastućoj vrednosti x ose
+
+        Funkcija sa vezbi
     '''
     img, contours, hierarchy = cv2.findContours(image_bin.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     sorted_regions = []  # lista sortiranih regiona po x osi (sa leva na desno)
@@ -215,17 +219,15 @@ def select_roi(image_orig, image_bin):
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)  # koordinate i velicina granicnog pravougaonika
         area = cv2.contourArea(contour)
-        if h > 20 :
+        if h > 20 and h < 30 and w < 30:
             # kopirati [y:y+h+1, x:x+w+1] sa binarne slike i smestiti u novu sliku
             # označiti region pravougaonikom na originalnoj slici (image_orig) sa rectangle funkcijom
             region = image_bin[y:y + h + 1, x:x + w + 1]
-            regions_array.append([cv2.resize(region, (28, 28), interpolation = cv2.INTER_NEAREST), (x, y, w, h)])
+            regions_array.append([region, (x, y, w, h)])
             cv2.rectangle(image_orig, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    regions_array = sorted(regions_array, key=lambda item: item[1][0])
-    sorted_regions = [region[0] for region in regions_array]
 
     # sortirati sve regione po x osi (sa leva na desno) i smestiti u promenljivu sorted_regions
-    return image_orig, sorted_regions
+    return image_orig, regions_array
 
 
 def pronadji_brojeve(slika):
@@ -250,8 +252,49 @@ def pronadji_brojeve(slika):
     plt.imshow(img_bin, 'gray')
     plt.show()
 
-    origano, sortirani_regioni = select_roi(slika, img_bin)
+    origano, regioni = select_roi(slika, img_bin)
 
     plt.imshow(origano)
     plt.show()
 
+    brojevi_za_neuronsku = []
+
+    for x in range(0, regioni.__len__()):
+
+        plt.imshow(regioni[x][0], 'gray')
+        plt.show()
+        brojevi_za_neuronsku.append([make_square(255-regioni[x][0]), regioni[x][1]])
+        plt.imshow(brojevi_za_neuronsku[x][0])
+        plt.show()
+
+
+
+    return brojevi_za_neuronsku
+
+
+
+def make_square(im):
+    '''
+
+        Funkcija koja prima za parametar sliku i pretvara je u dimenzije 28x28
+        ali tako da njenu originalnu velicinu ne dira, nego samo dodaje crne piksele sa strane
+        kako bi popunio prazninu.
+
+    '''
+    desired_size = 28
+    old_size = im.shape[:2]  # old_size is in (height, width) format
+    ratio = float(desired_size) / max(old_size)
+    new_size = tuple([int(x * ratio) for x in old_size])
+    # new_size should be in (width, height) format
+    im = cv2.resize(im, (new_size[1], new_size[0]))
+    delta_w = desired_size - new_size[1]
+    delta_h = desired_size - new_size[0]
+    top, bottom = delta_h // 2, delta_h - (delta_h // 2)
+    left, right = delta_w // 2, delta_w - (delta_w // 2)
+    color = [0, 0, 0]
+    new_im = cv2.copyMakeBorder(im, top, bottom, left, right, cv2.BORDER_CONSTANT,
+                                value=color)
+
+
+
+    return new_im

@@ -102,4 +102,5 @@ cv2.destroyAllWindows()
 capture.set(1, 1000)
 povr_vred, test_brojevi_slika = capture.read()
 
-utils.pronadji_brojeve(test_brojevi_slika)
+slike_brojeva_sa_frejma_i_kordinate = utils.pronadji_brojeve(test_brojevi_slika)
+
