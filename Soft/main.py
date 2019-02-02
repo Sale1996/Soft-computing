@@ -21,6 +21,8 @@ from keras import models
 #ucitavanje podataka koji ce biti trening i test skup za neuronsku mrezu
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
+
+
 x_train = x_train.reshape(60000, 784)
 x_test = x_test.reshape(10000, 784)
 
@@ -37,14 +39,35 @@ ann = utils.obuci_neuronsku(ann, ulazi_u_neuronsku, izlazi_iz_neuronske)
 ann = models.load_model('obucenaNeuronska1.h5')
 
 #testiranje neuronske mreze
+
+
+
 '''
 ulazi_za_test_u_neuronsku = utils.pripremi_ulaz_za_neuronsku_mrezu(x_test[4305: 4330])
 rezultati = ann.predict(np.array(ulazi_za_test_u_neuronsku, np.float32))
 print(utils.prikazi_rezultate(rezultati))
 print(y_test[4305: 4330])
+
+
 '''
+'''
+tacno = 0
+netacno = 0
+
+for x in range(1, 10000):
+    ulaz_za_neuronsku = utils.pripremi_ulaz_za_neuronsku_mrezu(x_test[x: x+1])
+    rezultat = ann.predict(np.array(ulaz_za_neuronsku, np.float32))
+    if(utils.prikazi_rezultate(rezultat)[0] == y_test[x]):
+        tacno = tacno + 1
+
+    else:
+        netacno = netacno + 1
 
 
+
+print("Tacno je" + str(tacno))
+print("Netacno je " + str(netacno))
+'''
 
 
 
@@ -52,7 +75,7 @@ print(y_test[4305: 4330])
 
 
 #ucitan video snimak
-capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft-computing\\Soft\\videos\\video-0.avi')
+capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft-computing\\Soft\\videos\\video-9.avi')
 
 
 broj_frejma = 0
@@ -99,8 +122,9 @@ cv2.destroyAllWindows()
 
 '''
 
-capture.set(1, 1000)
+capture.set(1, 888)
 povr_vred, test_brojevi_slika = capture.read()
 
 slike_brojeva_sa_frejma_i_kordinate = utils.pronadji_brojeve(test_brojevi_slika)
 
+lista_brojeva_prethodnog_frejma = utils.kreiraj_brojeve_trenutnog_frejma(slike_brojeva_sa_frejma_i_kordinate, ann)

@@ -125,11 +125,8 @@ def konvertuj_sliku_u_sivu(slika):
 
 def pronadji_plavu_liniju(slika):
 
-    plt.imshow(slika)
-    plt.show()
     hsv = cv2.cvtColor(slika, cv2.COLOR_BGR2HSV)
     plt.imshow(hsv)
-    plt.show()
     # radimo dilaciju i eroziju kako bi izdvojili liniju
     slika_plava = cv2.inRange(hsv, (100, 25, 25), (140, 255, 255))
     plt.imshow(slika_plava, 'gray')
@@ -138,9 +135,7 @@ def pronadji_plavu_liniju(slika):
     slika_plava = 255 - slika_plava
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
-    #image_bin = cv2.dilate(slika_plava, kernel, iterations=1)
-    #plt.imshow(image_bin, 'gray')
-    #plt.show()
+
     slika_plava = cv2.erode(slika_plava, kernel, iterations=1)
 
     plt.imshow(slika_plava, 'gray')
@@ -164,8 +159,6 @@ def pronadji_zelenu_liniju(slika):
     plt.show()
     #image_bin = cv2.erode(image_bin, kernel, iterations=1)
 
-    plt.imshow(image_bin, 'gray')
-    plt.show()
 
     return image_bin
 
@@ -183,24 +176,50 @@ def pronadji_temena_hog(slika):
 
     nasa_linija = lines[0]
 
-    kordinate = nasa_linija[0]
-    al = (kordinate[0], kordinate[1])
-    bl = (kordinate[2], kordinate[3])
-    m_dist = distance.euclidean(al, bl)
 
+    '''
+        pronalazenje min tacke po y
+        i pronalazenje max tacke po y
+    '''
+
+    kordinate = nasa_linija[0]
+
+    minY = (kordinate[0], kordinate[1])
+    maxY = (kordinate[0], kordinate[1])
+
+    #trazenje min Y
     for line in lines:
         coords = line[0]
-        a = (kordinate[0], kordinate[1])
-        b = (kordinate[2], kordinate[3])
-        dst = distance.euclidean(a, b)
+        y1 = (coords[0], coords[1])
+        y2 = (coords[2], coords[3])
 
-        if dst >= m_dist:
-            m_dist = dst
-            nasa_linija = line
+        if(y1[1]<y2[1]):
+            y=y1
+        else:
+            y=y2
+
+        if y[1] <= minY[1]:
+            minY = y
+
+    #trazenje max Y
+    for line in lines:
+        coords = line[0]
+        y1 = (coords[0], coords[1])
+        y2 = (coords[2], coords[3])
+
+        if (y1[1] > y2[1]):
+            y = y1
+        else:
+            y = y2
+
+        if y[1] >= maxY[1]:
+            maxY = y
 
 
+    kordinate = [minY[0],minY[1],maxY[0],maxY[1]]
 
-    return nasa_linija[0]
+    return kordinate
+
 
 #Funkcija sa vezbi 2 koja pronalazi regione
 def select_roi(image_orig, image_bin):
@@ -218,8 +237,7 @@ def select_roi(image_orig, image_bin):
     regions_array = []
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)  # koordinate i velicina granicnog pravougaonika
-        area = cv2.contourArea(contour)
-        if h > 20 and h < 30 and w < 30:
+        if h > 15 and h < 30 and w < 30:
             # kopirati [y:y+h+1, x:x+w+1] sa binarne slike i smestiti u novu sliku
             # označiti region pravougaonikom na originalnoj slici (image_orig) sa rectangle funkcijom
             region = image_bin[y:y + h + 1, x:x + w + 1]
@@ -236,7 +254,7 @@ def pronadji_brojeve(slika):
     img_bin = cv2.cvtColor(slika, cv2.COLOR_BGR2RGB)
     img_bin = cv2.cvtColor(img_bin, cv2.COLOR_RGB2GRAY)
 
-    img_bin = cv2.threshold(img_bin, 200, 255, cv2.THRESH_BINARY)[1]
+    img_bin = cv2.threshold(img_bin, 150, 255, cv2.THRESH_BINARY)[1]
 
     plt.imshow(img_bin, 'gray')
     plt.show()
@@ -246,7 +264,7 @@ def pronadji_brojeve(slika):
     img_bin = 255 - img_bin
 
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
     img_bin = cv2.erode(img_bin, kernel, iterations=1)
 
     plt.imshow(img_bin, 'gray')
@@ -261,11 +279,18 @@ def pronadji_brojeve(slika):
 
     for x in range(0, regioni.__len__()):
 
-        plt.imshow(regioni[x][0], 'gray')
-        plt.show()
+        #plt.imshow(regioni[x][0], 'gray')
+        #plt.show()
         brojevi_za_neuronsku.append([make_square(255-regioni[x][0]), regioni[x][1]])
-        plt.imshow(brojevi_za_neuronsku[x][0])
-        plt.show()
+        #plt.imshow(brojevi_za_neuronsku[x][0], 'gray')
+        #plt.show()
+        #doterana_slika = cv2.threshold(brojevi_za_neuronsku[x][0], 254, 255, cv2.THRESH_BINARY)[1]
+        #kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 1))
+        #doterana_slika = cv2.dilate(doterana_slika, kernel, iterations=1)
+
+       # brojevi_za_neuronsku[x][0] = doterana_slika;
+        #plt.imshow(brojevi_za_neuronsku[x][0], 'gray')
+        #plt.show()
 
 
 
@@ -283,8 +308,8 @@ def make_square(im):
     '''
     desired_size = 28
     old_size = im.shape[:2]  # old_size is in (height, width) format
-    ratio = float(desired_size) / max(old_size)
-    new_size = tuple([int(x * ratio) for x in old_size])
+   # ratio = float(desired_size) / max(old_size)
+    new_size = tuple([int(x * 0.9) for x in old_size])
     # new_size should be in (width, height) format
     im = cv2.resize(im, (new_size[1], new_size[0]))
     delta_w = desired_size - new_size[1]
@@ -298,3 +323,23 @@ def make_square(im):
 
 
     return new_im
+
+
+
+
+
+def kreiraj_brojeve_trenutnog_frejma (slike_i_kordinate_frejma, ann):
+
+    brojevi = []
+
+    for x in range(0, slike_i_kordinate_frejma.__len__()):
+        obradjena_slika = slike_i_kordinate_frejma[x][0].reshape(1, 784)
+        obradjena_slika = pripremi_ulaz_za_neuronsku_mrezu(obradjena_slika)
+        print(ann.predict(np.array(obradjena_slika, np.float32)))
+        vrednost = prikazi_rezultate(ann.predict(np.array(obradjena_slika, np.float32)))
+        plt.imshow(slike_i_kordinate_frejma[x][0])
+        plt.show()
+        print(vrednost)
+
+
+    return brojevi
