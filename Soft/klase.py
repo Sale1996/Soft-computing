@@ -31,6 +31,8 @@ class Linija:
 
 '''
 
+from scipy.spatial import distance
+
 class Broj :
 
     __vrednost = -1
@@ -46,3 +48,13 @@ class Broj :
         self.__da_li_je_preslo_sabiranje = preslo_sabiranje
         self.__da_li_je_preslo_oduzimanje = preslo_oduzimanje
         self.__preklopljeni_brojevi = preklopljeni_brojevi
+
+
+    def da_li_je_isti_broj(self, broj):
+
+        if(self.__vrednost == broj._Broj__vrednost):
+            distanca =distance.euclidean(self.__kordinate_sredisnje_tacke, broj._Broj__kordinate_sredisnje_tacke)
+            if(distanca < 100):
+                return True
+            else:
+                return False

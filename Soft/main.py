@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from keras import models
 
-
+from scipy.spatial import distance
 
 
 
@@ -48,15 +48,13 @@ for x in range(x_train.__len__()):
 
 
 
-plt.imshow(x_train1[80000])
-plt.show()
+
 
 for x in range(x_test.__len__()):
     x_test[x] = cv2.threshold(x_test[x],190, 255, cv2.THRESH_BINARY)[1]
 
 
-plt.imshow(x_test[2311])
-plt.show()
+
 
 x_train1 = np.asarray(x_train1).reshape(300000, 784)
 x_test = x_test.reshape(10000, 784)
@@ -156,11 +154,42 @@ cv2.destroyAllWindows()
     PREPOZNAVANJE BROJEVA SA SLIKE I KREIRANJE LISTE OBJEKATA BROJA
 
 '''
+#uzimamo informacije o video snimku kao sto su broj frejmova, visina i sirina prozora...
+videoLength = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+width = capture.get(cv2.CAP_PROP_FRAME_WIDTH )
+height = capture.get(cv2.CAP_PROP_FRAME_HEIGHT )
+lista_brojeva_predhodnog_frejma = []
+ista_brojeva_trenutnog_frejma = []
 
-capture.set(1, 420)
-povr_vred, test_brojevi_slika = capture.read()
+for x in range(1, videoLength, 5):
+    capture.set(1, x)
+    povr_vred, test_brojevi_slika = capture.read()
+    slike_brojeva_sa_frejma_i_kordinate = utils.pronadji_brojeve(test_brojevi_slika)
+    lista_brojeva_trenutnog_frejma = utils.kreiraj_brojeve_trenutnog_frejma(slike_brojeva_sa_frejma_i_kordinate, ann)
 
-slike_brojeva_sa_frejma_i_kordinate = utils.pronadji_brojeve(test_brojevi_slika)
+    #ukoliko je prva iteracija onda postavljamo da je lista predhodnog frejma == nasoj trenutnoj
+    if(x == 1):
+        lista_brojeva_predhodnog_frejma = lista_brojeva_trenutnog_frejma
 
-lista_brojeva_prethodnog_frejma = utils.kreiraj_brojeve_trenutnog_frejma(slike_brojeva_sa_frejma_i_kordinate, ann)
+    #definisemo ostale atribute trenutnog frejma iiiiii nalazimo nestale brojeve
+    lista_brojeva_trenutnog_frejma = utils.pronadji_nestale_brojeve_i_definisi_trenutne(lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height )
+
+
+    plt.imshow(test_brojevi_slika)
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
