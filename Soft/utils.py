@@ -89,7 +89,7 @@ def obuci_neuronsku(ann, x_train, y_train):
     #napomena: mensanje je stavljeno na false, posto su test skupovi inicijalno vec promesani
     ann.fit(x_train, y_train, epochs=10, batch_size=128, verbose=1, shuffle=False)
 
-    ann.save('obucenaNeuronska1.h5')
+    ann.save('obucenaNeuronska2.h5')
 
 
     return ann
@@ -254,7 +254,7 @@ def pronadji_brojeve(slika):
     img_bin = cv2.cvtColor(slika, cv2.COLOR_BGR2RGB)
     img_bin = cv2.cvtColor(img_bin, cv2.COLOR_RGB2GRAY)
 
-    img_bin = cv2.threshold(img_bin, 150, 255, cv2.THRESH_BINARY)[1]
+    img_bin = cv2.threshold(img_bin, 140, 255, cv2.THRESH_BINARY)[1]
 
     plt.imshow(img_bin, 'gray')
     plt.show()
@@ -279,18 +279,8 @@ def pronadji_brojeve(slika):
 
     for x in range(0, regioni.__len__()):
 
-        #plt.imshow(regioni[x][0], 'gray')
-        #plt.show()
         brojevi_za_neuronsku.append([make_square(255-regioni[x][0]), regioni[x][1]])
-        #plt.imshow(brojevi_za_neuronsku[x][0], 'gray')
-        #plt.show()
-        #doterana_slika = cv2.threshold(brojevi_za_neuronsku[x][0], 254, 255, cv2.THRESH_BINARY)[1]
-        #kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 1))
-        #doterana_slika = cv2.dilate(doterana_slika, kernel, iterations=1)
 
-       # brojevi_za_neuronsku[x][0] = doterana_slika;
-        #plt.imshow(brojevi_za_neuronsku[x][0], 'gray')
-        #plt.show()
 
 
 
@@ -333,13 +323,31 @@ def kreiraj_brojeve_trenutnog_frejma (slike_i_kordinate_frejma, ann):
     brojevi = []
 
     for x in range(0, slike_i_kordinate_frejma.__len__()):
-        obradjena_slika = slike_i_kordinate_frejma[x][0].reshape(1, 784)
+
+
+        obradjena_slika = cv2.threshold(slike_i_kordinate_frejma[x][0], 130, 255, cv2.THRESH_BINARY)[1]
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 1))
+        obradjena_slika = cv2.erode(obradjena_slika, kernel, iterations=1)
+
+        plt.imshow(obradjena_slika, 'gray')
+        plt.show()
+
+        obradjena_slika = obradjena_slika.reshape(1, 784)
         obradjena_slika = pripremi_ulaz_za_neuronsku_mrezu(obradjena_slika)
         print(ann.predict(np.array(obradjena_slika, np.float32)))
         vrednost = prikazi_rezultate(ann.predict(np.array(obradjena_slika, np.float32)))
-        plt.imshow(slike_i_kordinate_frejma[x][0])
-        plt.show()
-        print(vrednost)
+
+        print(str(vrednost))
+
+        #x + w/2
+        x_kordinata_sredisnje_tacke = round(slike_i_kordinate_frejma[x][1][0] + slike_i_kordinate_frejma[x][1][2]/2)
+        #y + h/2
+        y_kordinata_sredisnje_tacke = round(slike_i_kordinate_frejma[x][1][1] + slike_i_kordinate_frejma[x][1][3]/2)
+
+        broj = klase.Broj(vrednost, [x_kordinata_sredisnje_tacke, y_kordinata_sredisnje_tacke], False, False, [])
+
+        brojevi.append(broj)
 
 
     return brojevi

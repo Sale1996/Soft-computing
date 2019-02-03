@@ -34,17 +34,15 @@ class Linija:
 class Broj :
 
     __vrednost = -1
-    __kordinate_gornje_leve_tacke= [-1,-1]
-    __kordinate_donje_desne_tacke = [-1,-1]
+    __kordinate_sredisnje_tacke= [-1,-1]
     __da_li_je_preslo_sabiranje = False
     __da_li_je_preslo_oduzimanje = False
     __preklopljeni_brojevi = []
 
-    def __init__(self, vrednost, kordinate_gornje_tacke, kordinate_donje_tacke, preslo_sabiranje, preslo_oduzimanje, preklopljeni_brojevi):
+    def __init__(self, vrednost, kordinate_sredisnje_tacke, preslo_sabiranje, preslo_oduzimanje, preklopljeni_brojevi):
 
         self.__vrednost = vrednost
-        self.__kordinate_gornje_leve_tacke = kordinate_gornje_tacke
-        self.__kordinate_donje_desne_tacke = kordinate_donje_tacke
+        self.__kordinate_sredisnje_tacke = kordinate_sredisnje_tacke
         self.__da_li_je_preslo_sabiranje = preslo_sabiranje
         self.__da_li_je_preslo_oduzimanje = preslo_oduzimanje
         self.__preklopljeni_brojevi = preklopljeni_brojevi

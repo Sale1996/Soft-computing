@@ -23,20 +23,55 @@ from keras import models
 
 
 
-x_train = x_train.reshape(60000, 784)
+x_train1= []
+y_train1= []
+
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 1))
+
+for x in range(x_train.__len__()):
+    x_train1.append(cv2.threshold(x_train[x], 170, 255, cv2.THRESH_BINARY)[1])
+
+    x_train1.append(cv2.erode(x_train[x], kernel, iterations=1))
+    x_train1.append(cv2.erode(x_train[x], kernel, iterations=1))
+
+
+    x_train1.append(cv2.dilate(x_train[x], kernel, iterations=1))
+    x_train1.append(cv2.dilate(x_train[x], kernel, iterations=2))
+
+
+    y_train1.append(y_train[x])
+    y_train1.append(y_train[x])
+    y_train1.append(y_train[x])
+    y_train1.append(y_train[x])
+    y_train1.append(y_train[x])
+
+
+
+
+plt.imshow(x_train1[80000])
+plt.show()
+
+for x in range(x_test.__len__()):
+    x_test[x] = cv2.threshold(x_test[x],190, 255, cv2.THRESH_BINARY)[1]
+
+
+plt.imshow(x_test[2311])
+plt.show()
+
+x_train1 = np.asarray(x_train1).reshape(300000, 784)
 x_test = x_test.reshape(10000, 784)
 
 
 #Ukoliko nema obucene neuronske mreze, ova sekcija koda bi se trebala izvrsiti
 '''
-ulazi_u_neuronsku = utils.pripremi_ulaz_za_neuronsku_mrezu(x_train)
-izlazi_iz_neuronske = utils.pripremi_izlaz_za_neurosnku_mrezu(y_train)
+ulazi_u_neuronsku = utils.pripremi_ulaz_za_neuronsku_mrezu(x_train1)
+izlazi_iz_neuronske = utils.pripremi_izlaz_za_neurosnku_mrezu(y_train1)
 ann = utils.kreiraj_neuronsku()
 ann = utils.obuci_neuronsku(ann, ulazi_u_neuronsku, izlazi_iz_neuronske)
 '''
 
 #Ucitavamo postojecu neuronsku mrezu
-ann = models.load_model('obucenaNeuronska1.h5')
+ann = models.load_model('obucenaNeuronska2.h5')
 
 #testiranje neuronske mreze
 
@@ -67,8 +102,8 @@ for x in range(1, 10000):
 
 print("Tacno je" + str(tacno))
 print("Netacno je " + str(netacno))
-'''
 
+'''
 
 
 
@@ -122,9 +157,10 @@ cv2.destroyAllWindows()
 
 '''
 
-capture.set(1, 888)
+capture.set(1, 420)
 povr_vred, test_brojevi_slika = capture.read()
 
 slike_brojeva_sa_frejma_i_kordinate = utils.pronadji_brojeve(test_brojevi_slika)
 
 lista_brojeva_prethodnog_frejma = utils.kreiraj_brojeve_trenutnog_frejma(slike_brojeva_sa_frejma_i_kordinate, ann)
+
