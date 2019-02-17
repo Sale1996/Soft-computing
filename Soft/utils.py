@@ -215,44 +215,70 @@ def pronadji_temena_hog(slika):
 
 
 #Funkcija sa vezbi 2 koja pronalazi regione
-def select_roi(image_orig, image_bin):
+def select_roi(image_orig, image_bin, zelena_linija, plava_linija):
     '''
-        Oznaciti regione od interesa na originalnoj slici. (ROI = regions of interest)
-        Za svaki region napraviti posebnu sliku dimenzija 28 x 28.
-        Za označavanje regiona koristiti metodu cv2.boundingRect(contour).
-        Kao povratnu vrednost vratiti originalnu sliku na kojoj su obeleženi regioni
-        i niz slika koje predstavljaju regione sortirane po rastućoj vrednosti x ose
-
         Funkcija sa vezbi
     '''
     img, contours, hierarchy = cv2.findContours(image_bin.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    sorted_regions = []  # lista sortiranih regiona po x osi (sa leva na desno)
     regions_array = []
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)  # koordinate i velicina granicnog pravougaonika
         if h > 15 and h < 30 and w < 30:
             # kopirati [y:y+h+1, x:x+w+1] sa binarne slike i smestiti u novu sliku
             # označiti region pravougaonikom na originalnoj slici (image_orig) sa rectangle funkcijom
-            region = image_bin[y:y + h + 1, x:x + w + 1]
-            regions_array.append([region, (x, y, w, h)])
-            cv2.rectangle(image_orig, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+            #GLEDAMO DA LI JE KONTURA OSAKACENA NEKOM LINIJOM... a to gledamo tako sto abs od razlika Y-a od centra konture i linije bude <10
+
+            y_prave_za_x_tacke_zelena_linija = ((zelena_linija.druga_tacka[1] - zelena_linija.prva_tacka[1]) / (zelena_linija.druga_tacka[0] -zelena_linija.prva_tacka[0])) * (x -zelena_linija.prva_tacka[0]) +  zelena_linija.prva_tacka[1]
+            y_prave_za_x_tacke_plava_linija = ((plava_linija.druga_tacka[1] -plava_linija.prva_tacka[1]) / (plava_linija.druga_tacka[0] - plava_linija.prva_tacka[0])) * ( x - plava_linija.prva_tacka[0]) + plava_linija.prva_tacka[1]
+
+            if((abs(y+h/2 - y_prave_za_x_tacke_zelena_linija) < 15 and (x + w/2) > zelena_linija.druga_tacka[0] and (x + w/2)< zelena_linija.prva_tacka[0]) or (abs(y+h/2 -y_prave_za_x_tacke_plava_linija ) < 15 and (x + w/2)>plava_linija.druga_tacka[0] and (x + w/2)<plava_linija.prva_tacka[0])):
+                print('')
+            else:
+
+                #da li je broj pojeden od strane nekog drugog ?
+
+
+                prosiri_za = 25-w
+                produzi_za = 25-h
+                slika_broja_orig = image_orig[int(y-round(produzi_za/2,0) ) : int(y + h + round(produzi_za/2,0)) ,int(x - round(prosiri_za/2,0)) : int(x + w  + round(prosiri_za/2,0))]
+                slika_broja = cv2.cvtColor(slika_broja_orig, cv2.COLOR_RGB2GRAY)
+                slika_broja = cv2.threshold(slika_broja, 180, 255, cv2.THRESH_BINARY)[1]
+                kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+                slika_broja = cv2.dilate(slika_broja, kernel, iterations=2)
+                #sada ako ga je preklopio neki broj onda ce ovde biti vise od 1 konture...
+                img, konture, hierarchy = cv2.findContours(slika_broja, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+                broj_kontura_jednog_broja = 0
+               # plt.imshow(slika_broja)
+               # plt.show()
+
+                for kontura in konture:
+                    xx, yy, ww, hh = cv2.boundingRect(kontura)
+                    if(abs(13 - (xx+ww/2)) < 8 and abs(13-(yy+hh/2)) <8 and hh < 12  and ww < 12):
+                        print('')
+                    else:
+                        broj_kontura_jednog_broja = broj_kontura_jednog_broja + 1
+
+
+                if(broj_kontura_jednog_broja > 1):
+                    print("")
+                else:
+                    region = image_bin[y:y + h + 1, x:x + w + 1]
+                    regions_array.append([region, (x, y, w, h)])
+                    cv2.rectangle(image_orig, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
     # sortirati sve regione po x osi (sa leva na desno) i smestiti u promenljivu sorted_regions
     return image_orig, regions_array
 
-
-def pronadji_brojeve(slika):
+#vraca slicice brojeva sa njenim kordinatama
+def pronadji_brojeve(slika, zelena_linija, plava_linija):
 
 
     img_bin = cv2.cvtColor(slika, cv2.COLOR_BGR2RGB)
     img_bin = cv2.cvtColor(img_bin, cv2.COLOR_RGB2GRAY)
-
     img_bin = cv2.threshold(img_bin, 140, 255, cv2.THRESH_BINARY)[1]
 
-
-
     #brojevi su izdvojeni na slici
-
     img_bin = 255 - img_bin
 
 
@@ -260,18 +286,17 @@ def pronadji_brojeve(slika):
     img_bin = cv2.erode(img_bin, kernel, iterations=1)
 
 
+    #dobijanje regiona
+    origano, regioni = select_roi(slika, img_bin, zelena_linija, plava_linija)
 
-    origano, regioni = select_roi(slika, img_bin)
-
-
+    plt.imshow(origano)
+    plt.show()
 
     brojevi_za_neuronsku = []
 
     for x in range(0, regioni.__len__()):
 
         brojevi_za_neuronsku.append([make_square(255-regioni[x][0]), regioni[x][1]])
-
-
 
 
     return brojevi_za_neuronsku
@@ -300,8 +325,6 @@ def make_square(im):
     new_im = cv2.copyMakeBorder(im, top, bottom, left, right, cv2.BORDER_CONSTANT,
                                 value=color)
 
-
-
     return new_im
 
 
@@ -315,22 +338,23 @@ def kreiraj_brojeve_trenutnog_frejma (slike_i_kordinate_frejma, ann):
     for x in range(0, slike_i_kordinate_frejma.__len__()):
 
 
-        obradjena_slika = cv2.threshold(slike_i_kordinate_frejma[x][0], 130, 255, cv2.THRESH_BINARY)[1]
+        obradjena_slika = cv2.threshold(slike_i_kordinate_frejma[x][0], 5, 255, cv2.THRESH_BINARY)[1]
 
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 1))
-        obradjena_slika = cv2.erode(obradjena_slika, kernel, iterations=1)
-        '''
-        plt.imshow(obradjena_slika, 'gray')
-        plt.show()
-        '''
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+        obradjena_slika = cv2.erode(obradjena_slika, kernel, iterations=2)
+
+       # plt.imshow(obradjena_slika, 'gray')
+       # plt.show()
+
+        #pronalazenje vrednosti cifre koja se nalazi na slici
         obradjena_slika = obradjena_slika.reshape(1, 784)
         obradjena_slika = pripremi_ulaz_za_neuronsku_mrezu(obradjena_slika)
         vrednost = prikazi_rezultate(ann.predict(np.array(obradjena_slika, np.float32)))
+        #print("vrednost je: " + str(vrednost))
 
-
-        #x + w/2
+        #x = x + w/2
         x_kordinata_sredisnje_tacke = round(slike_i_kordinate_frejma[x][1][0] + slike_i_kordinate_frejma[x][1][2]/2)
-        #y + h/2
+        #y = y + h/2
         y_kordinata_sredisnje_tacke = round(slike_i_kordinate_frejma[x][1][1] + slike_i_kordinate_frejma[x][1][3]/2)
 
         broj = klase.Broj(vrednost, [x_kordinata_sredisnje_tacke, y_kordinata_sredisnje_tacke], False, False, [])
@@ -341,15 +365,17 @@ def kreiraj_brojeve_trenutnog_frejma (slike_i_kordinate_frejma, ann):
     return brojevi
 
 
-def pronadji_nestale_brojeve_i_definisi_trenutne (lista_predhodnog, lista_trenutnog, zelena_linija_kordinate, plava_linija_kordinate, sirina_frejma, visina_frejma):
+def pronadji_nestale_brojeve_i_definisi_trenutne (slika, lista_predhodnog, lista_trenutnog, zelena_linija_kordinate, plava_linija_kordinate, sirina_frejma, visina_frejma):
 
     for broj_iz_predhodnog in lista_predhodnog:
         for broj_iz_trenutnog in lista_trenutnog:
             if(broj_iz_predhodnog.da_li_je_isti_broj(broj_iz_trenutnog)):
                 #1 slucaj , jeste taj broj... ok onda broj iz trenutnog samo punimo podacima...
-                broj_iz_trenutnog._Broj__da_li_je_preslo_sabiranje = broj_iz_predhodnog._Broj__da_li_je_preslo_sabiranje
-                broj_iz_trenutnog._Broj__da_li_je_preslo_oduzimanje = broj_iz_predhodnog._Broj__da_li_je_preslo_oduzimanje
-                broj_iz_trenutnog._Broj__preklopljeni_brojevi = broj_iz_predhodnog._Broj__preklopljeni_brojevi
+                broj_iz_trenutnog.da_li_je_preslo_sabiranje = broj_iz_predhodnog.da_li_je_preslo_sabiranje
+                broj_iz_trenutnog.da_li_je_preslo_oduzimanje = broj_iz_predhodnog.da_li_je_preslo_oduzimanje
+                broj_iz_trenutnog.preklopljeni_brojevi = broj_iz_predhodnog.preklopljeni_brojevi
+                broj_iz_trenutnog.pomeraj_po_x_osi = broj_iz_trenutnog.kordinate_sredisnje_tacke[0] - broj_iz_predhodnog.pomeraj_po_x_osi
+                broj_iz_trenutnog.pomeraj_po_y_osi = broj_iz_trenutnog.kordinate_sredisnje_tacke[1] - broj_iz_predhodnog.pomeraj_po_y_osi
 
     #For iznad je bio samo za definisanje svakog trneutnog e sada gledamo koji su nestali
     nasao_broj = False
@@ -357,53 +383,154 @@ def pronadji_nestale_brojeve_i_definisi_trenutne (lista_predhodnog, lista_trenut
         for broj_iz_trenutnog in lista_trenutnog:
             if(broj_iz_predhodnog.da_li_je_isti_broj(broj_iz_trenutnog)):
                     nasao_broj = True
-                    break;
+                    break
         if(nasao_broj):
             nasao_broj=False
-            continue;
+            continue
 
         #druga situacija da li je broj na rubovima frejma?
-        x_rub = sirina_frejma - broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke[0]
-        y_rub = visina_frejma - broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke[1]
+        x_rub = sirina_frejma - broj_iz_predhodnog.kordinate_sredisnje_tacke[0]
+        y_rub = visina_frejma - broj_iz_predhodnog.kordinate_sredisnje_tacke[1]
 
 
-        if(x_rub < 80 or y_rub < 80):
+        if(x_rub < 20 or y_rub < 20):
             #broj je na rubu i onda mozemo da izadjemo iz pretrage..
-            print('Broj ' + str(broj_iz_predhodnog._Broj__vrednost) + 'Je ispao' )
-            continue;
+            print('Broj ' + str(broj_iz_predhodnog.vrednost) + 'Je ispao' )
+            continue
 
 
         #sada gledamo da li je taj broj preklopila linija (nalazimo Y preko jednacine linije za X kordinatu tacke, i ukoliko su blizu onda znaci da jeste)
         # y = ( (y2-y1)/(x2-x1) ) * ( x - x1 ) + y2
 
-        y_prave_za_x_tacke_zelena_linija = ((zelena_linija_kordinate._Linija__druga_tacka[1] - zelena_linija_kordinate._Linija__prva_tacka[1])/(zelena_linija_kordinate._Linija__druga_tacka[0] - zelena_linija_kordinate._Linija__prva_tacka[0]))*(broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke[0] - zelena_linija_kordinate._Linija__prva_tacka[0] ) + zelena_linija_kordinate._Linija__prva_tacka[1]
-        y_prave_za_x_tacke_plava_linija = ((plava_linija_kordinate._Linija__druga_tacka[1] - plava_linija_kordinate._Linija__prva_tacka[1])/(plava_linija_kordinate._Linija__druga_tacka[0] - plava_linija_kordinate._Linija__prva_tacka[0]))*(broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke[0] - plava_linija_kordinate._Linija__prva_tacka[0] ) + plava_linija_kordinate._Linija__prva_tacka[1]
+        y_prave_za_x_tacke_zelena_linija = ((zelena_linija_kordinate.druga_tacka[1] - zelena_linija_kordinate.prva_tacka[1])/(zelena_linija_kordinate.druga_tacka[0] - zelena_linija_kordinate.prva_tacka[0]))*(broj_iz_predhodnog.kordinate_sredisnje_tacke[0] - zelena_linija_kordinate.prva_tacka[0] ) + zelena_linija_kordinate.prva_tacka[1]
+        y_prave_za_x_tacke_plava_linija = ((plava_linija_kordinate.druga_tacka[1] - plava_linija_kordinate.prva_tacka[1])/(plava_linija_kordinate.druga_tacka[0] - plava_linija_kordinate.prva_tacka[0]))*(broj_iz_predhodnog.kordinate_sredisnje_tacke[0] - plava_linija_kordinate.prva_tacka[0] ) + plava_linija_kordinate.prva_tacka[1]
 
         #Ukoliko je razlika izmedju visine tacke od neke od ove 2 manja od 40 onda znaci da su se preklopili...
-        if(abs(broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_plava_linija) < 40 or abs(broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_zelena_linija) < 40):
+        if(abs(broj_iz_predhodnog.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_plava_linija) < 20 or abs(broj_iz_predhodnog.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_zelena_linija) < 20):
             #ukoliko jeste samo dodajemo na listu trenutnog frejma
-            print('Broj ' + str(broj_iz_predhodnog._Broj__vrednost) + '  je pojela linija')
+            print('Broj ' + str(broj_iz_predhodnog.vrednost) + '  je pojela linija')
+            #cv2.rectangle(slika, (broj_iz_predhodnog.kordinate_sredisnje_tacke[0], broj_iz_predhodnog.kordinate_sredisnje_tacke[1]), (broj_iz_predhodnog.kordinate_sredisnje_tacke[0] + 6, broj_iz_predhodnog.kordinate_sredisnje_tacke[1] + 6), (0, 0, 255), 2)
+
+            #ukoliko ga je pojela linija mi moramo da pratimo njegov pravac kretanja, tako da pomeramo njegove kordinate za vrednosti iz objekta...
+            broj_iz_predhodnog.kordinate_sredisnje_tacke[0] = broj_iz_predhodnog.kordinate_sredisnje_tacke[0] + broj_iz_predhodnog.pomeraj_po_x_osi
+            broj_iz_predhodnog.kordinate_sredisnje_tacke[1] = broj_iz_predhodnog.kordinate_sredisnje_tacke[1] + broj_iz_predhodnog.pomeraj_po_y_osi
+
             lista_trenutnog.append(broj_iz_predhodnog)
             continue
 
 
+
+
+
+
         #ukoliko nije nista od toga onda ga je sigurno progutao neki broj i sada trazimo
         #najmanje euklidsko rastojanje i u njegovu listu smestamo nas broj...
-
         najblizi_broj = lista_trenutnog[0]
-        najblize_rastojanje = distance.euclidean(broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke, lista_trenutnog[0]._Broj__kordinate_sredisnje_tacke)
+        najblize_rastojanje = distance.euclidean(broj_iz_predhodnog.kordinate_sredisnje_tacke, lista_trenutnog[0].kordinate_sredisnje_tacke)
 
         for broj in lista_trenutnog:
-            rastojanje = distance.euclidean(broj_iz_predhodnog._Broj__kordinate_sredisnje_tacke, broj._Broj__kordinate_sredisnje_tacke)
+            rastojanje = distance.euclidean(broj_iz_predhodnog.kordinate_sredisnje_tacke, broj.kordinate_sredisnje_tacke)
 
             if(rastojanje < najblize_rastojanje):
                 najblizi_broj = broj
                 najblize_rastojanje = rastojanje
 
         #nasli broj i sada cemo da dodamo u onu listu ovaj iz predhodnog...
-        print('Broj ' + str(broj_iz_predhodnog._Broj__vrednost) + 'je pojeo broj ' + str(najblizi_broj._Broj__vrednost))
-        najblizi_broj._Broj__preklopljeni_brojevi.append(broj_iz_predhodnog)
+        if(najblize_rastojanje < 30):
 
+            najblizi_broj.preklopljeni_brojevi.append(broj_iz_predhodnog)
+            print('Broj ' + str(najblizi_broj.vrednost) + 'je pojeo broj ' + str(broj_iz_predhodnog.vrednost))
+            print('Kordinate najblizeg broja : ' + str(najblizi_broj.kordinate_sredisnje_tacke[0]) +',' + str(najblizi_broj.kordinate_sredisnje_tacke[1]) + ', a kordinate pojedenog su:' + str(broj_iz_predhodnog.kordinate_sredisnje_tacke[0]) + ',' + str(broj_iz_predhodnog.kordinate_sredisnje_tacke[1]))
+
+
+
+      #  print('Ovaj broj ne postoji nigde, a vrednost mu je : ' + str(broj_iz_predhodnog.vrednost) + " a kordinate : " + str(broj_iz_predhodnog.kordinate_sredisnje_tacke))
 
 
     return lista_trenutnog
+
+
+def pronadji_novonastale_brojeve(lista_predhodnog, lista_trenutnog, zelena_linija_kordinate, plava_linija_kordinate, sirina_frejma, visina_frejma):
+
+    nova_lista_trenutnog = []
+
+    for broj_iz_trenutnog in lista_trenutnog:
+        nasao_broj=False
+        for broj_iz_predhodnog in lista_predhodnog :
+            if(broj_iz_trenutnog.da_li_je_isti_broj(broj_iz_predhodnog)):
+                #nasli smo ga u proslom nizu tako da je sve uredu...
+                nova_lista_trenutnog.append(broj_iz_trenutnog)
+                nasao_broj=True
+                break
+
+        if(nasao_broj):
+             continue
+
+        #ukoliko je tek usao nista ne radimo
+        if(broj_iz_predhodnog.kordinate_sredisnje_tacke[1] < 40):
+            #znaci da je broj tek upao te onda je to super
+            nova_lista_trenutnog.append(broj_iz_trenutnog)
+            continue
+
+
+
+        #nova_lista_trenutnog.append(broj_iz_trenutnog)
+        #onda mora da je ovaj broj pojeden pa trazimo broj koji ga je pojeo i izbacujemo ovaj nas iz liste
+        najblizi_broj = lista_trenutnog[0]
+        najblize_rastojanje = distance.euclidean(broj_iz_trenutnog.kordinate_sredisnje_tacke,
+                                                 lista_trenutnog[0].kordinate_sredisnje_tacke)
+
+        for broj in lista_trenutnog:
+            rastojanje = distance.euclidean(broj_iz_trenutnog.kordinate_sredisnje_tacke,
+                                            broj.kordinate_sredisnje_tacke)
+
+            if (rastojanje < najblize_rastojanje):
+                najblizi_broj = broj
+                najblize_rastojanje = rastojanje
+
+        # nasli broj i sada cemo da dodamo u onu listu ovaj iz predhodnog...
+        if (najblize_rastojanje < 30):
+            najblizi_broj.preklopljeni_brojevi.remove(broj_iz_trenutnog)
+            print('Broj ' + str(najblizi_broj.vrednost) + 'je pojeo broj ' + str(broj_iz_trenutnog.vrednost))
+            print('Kordinate najblizeg broja : ' + str(najblizi_broj.kordinate_sredisnje_tacke[0]) + ',' + str(
+                najblizi_broj.kordinate_sredisnje_tacke[1]) + ', a kordinate pojedenog su:' + str(
+                broj_iz_trenutnog.kordinate_sredisnje_tacke[0]) + ',' + str(
+                broj_iz_trenutnog.kordinate_sredisnje_tacke[1]))
+
+
+
+    return nova_lista_trenutnog
+
+
+def azurirajRezultat(rezultat, zelena_linija,plava_linija,lista_brojeva_trenutnog_frejma):
+
+    for broj in lista_brojeva_trenutnog_frejma:
+
+        y_prave_za_x_tacke_zelena_linija = ((zelena_linija.druga_tacka[1] -
+                                             zelena_linija.prva_tacka[1]) / (
+                zelena_linija.druga_tacka[0] -
+                zelena_linija.prva_tacka[0])) * (
+                broj.kordinate_sredisnje_tacke[0] -
+                                                       zelena_linija.prva_tacka[0]) + \
+                                           zelena_linija.prva_tacka[1]
+
+        y_prave_za_x_tacke_plava_linija = ((plava_linija.druga_tacka[1] -
+                                            plava_linija.prva_tacka[1]) / (
+                plava_linija.druga_tacka[0] -
+                plava_linija.prva_tacka[0])) * (
+                broj.kordinate_sredisnje_tacke[0] -
+                                                      plava_linija.prva_tacka[0]) + \
+                                          plava_linija.prva_tacka[1]
+
+        if(broj.da_li_je_preslo_sabiranje == False):
+            if (abs(broj.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_plava_linija) < 40):
+                if(broj.kordinate_sredisnje_tacke[0] > plava_linija.druga_tacka[0] and broj.kordinate_sredisnje_tacke[0] < plava_linija.druga_tacka[0]):
+                    rezultat = rezultat + broj.vrednost
+
+        if (broj.da_li_je_preslo_oduzimanje == False):
+            if (abs(broj.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_zelena_linija) < 40):
+                if (broj.kordinate_sredisnje_tacke[0] > zelena_linija.druga_tacka[0] and
+                        broj.kordinate_sredisnje_tacke[0] < zelena_linija.druga_tacka[0]):
+                    rezultat = rezultat - broj.vrednost
+
+    return rezultat

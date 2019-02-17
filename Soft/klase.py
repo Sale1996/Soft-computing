@@ -6,13 +6,13 @@
 
 class Linija:
 
-    __prva_tacka = [0, 0]
-    __druga_tacka = [0, 0]
+   # __prva_tacka = [0, 0]
+  #  __druga_tacka = [0, 0]
 
     def __init__(self, kordinate_linije):
 
-        self.__prva_tacka = (kordinate_linije[0], kordinate_linije[1])
-        self.__druga_tacka = (kordinate_linije[2], kordinate_linije[3])
+        self.prva_tacka = (kordinate_linije[0], kordinate_linije[1])
+        self.druga_tacka = (kordinate_linije[2], kordinate_linije[3])
 
 
 
@@ -35,25 +35,29 @@ from scipy.spatial import distance
 
 class Broj :
 
-    __vrednost = -1
-    __kordinate_sredisnje_tacke= [-1,-1]
-    __da_li_je_preslo_sabiranje = False
-    __da_li_je_preslo_oduzimanje = False
-    __preklopljeni_brojevi = []
+    vrednost = -1
+    kordinate_sredisnje_tacke= [-1,-1]
+    da_li_je_preslo_sabiranje = False
+    da_li_je_preslo_oduzimanje = False
+    preklopljeni_brojevi = []
+    pomeraj_po_x_osi = 0
+    pomeraj_po_y_osi = 0
 
     def __init__(self, vrednost, kordinate_sredisnje_tacke, preslo_sabiranje, preslo_oduzimanje, preklopljeni_brojevi):
 
-        self.__vrednost = vrednost
-        self.__kordinate_sredisnje_tacke = kordinate_sredisnje_tacke
-        self.__da_li_je_preslo_sabiranje = preslo_sabiranje
-        self.__da_li_je_preslo_oduzimanje = preslo_oduzimanje
-        self.__preklopljeni_brojevi = preklopljeni_brojevi
+        self.vrednost = vrednost
+        self.kordinate_sredisnje_tacke = kordinate_sredisnje_tacke
+        self.da_li_je_preslo_sabiranje = preslo_sabiranje
+        self.da_li_je_preslo_oduzimanje = preslo_oduzimanje
+        self.preklopljeni_brojevi = preklopljeni_brojevi
+        self.pomeraj_po_x_osi=0
+        self.pomeraj_po_y_osi=0
 
 
     def da_li_je_isti_broj(self, broj):
 
-        if(self.__vrednost == broj._Broj__vrednost):
-            distanca =distance.euclidean(self.__kordinate_sredisnje_tacke, broj._Broj__kordinate_sredisnje_tacke)
+        if(self.vrednost == broj.vrednost):
+            distanca =distance.euclidean(self.kordinate_sredisnje_tacke, broj.kordinate_sredisnje_tacke)
             if(distanca < 100):
                 return True
             else:

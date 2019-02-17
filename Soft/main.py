@@ -108,7 +108,7 @@ print("Netacno je " + str(netacno))
 
 
 #ucitan video snimak
-capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft-computing\\Soft\\videos\\video-9.avi')
+capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft-computing\\Soft\\videos\\video-2.avi')
 
 
 broj_frejma = 0
@@ -139,8 +139,8 @@ plava_linija = klase.Linija(utils.pronadji_temena_hog(binarna_slika_plave_linije
 #iscrtavanje pronadjenih linija koje je hog otkrio, radi provere
 slika = utils.konvertuj_sliku_u_sivu(frame)
 
-cv2.line(slika, (zelena_linija._Linija__prva_tacka[0], zelena_linija._Linija__prva_tacka[1]), (zelena_linija._Linija__druga_tacka[0], zelena_linija._Linija__druga_tacka[1]), (0, 255, 0), 3)
-cv2.line(slika, (plava_linija._Linija__prva_tacka[0], plava_linija._Linija__prva_tacka[1]), (plava_linija._Linija__druga_tacka[0], plava_linija._Linija__druga_tacka[1]), (0, 255, 0), 3)
+cv2.line(slika, (zelena_linija.prva_tacka[0], zelena_linija.prva_tacka[1]), (zelena_linija.druga_tacka[0], zelena_linija.druga_tacka[1]), (0, 255, 0), 3)
+cv2.line(slika, (plava_linija.prva_tacka[0], plava_linija.prva_tacka[1]), (plava_linija.druga_tacka[0], plava_linija.druga_tacka[1]), (0, 255, 0), 3)
 
 cv2.imshow("Slika", slika)
 cv2.waitKey(0)
@@ -161,23 +161,37 @@ height = capture.get(cv2.CAP_PROP_FRAME_HEIGHT )
 lista_brojeva_predhodnog_frejma = []
 ista_brojeva_trenutnog_frejma = []
 
+rezultat= 0
+
 for x in range(1, videoLength, 5):
+
     capture.set(1, x)
+
     povr_vred, test_brojevi_slika = capture.read()
-    slike_brojeva_sa_frejma_i_kordinate = utils.pronadji_brojeve(test_brojevi_slika)
+
+    slike_brojeva_sa_frejma_i_kordinate = utils.pronadji_brojeve(test_brojevi_slika, zelena_linija, plava_linija)
+
     lista_brojeva_trenutnog_frejma = utils.kreiraj_brojeve_trenutnog_frejma(slike_brojeva_sa_frejma_i_kordinate, ann)
 
     #ukoliko je prva iteracija onda postavljamo da je lista predhodnog frejma == nasoj trenutnoj
     if(x == 1):
+
         lista_brojeva_predhodnog_frejma = lista_brojeva_trenutnog_frejma
 
-    #definisemo ostale atribute trenutnog frejma iiiiii nalazimo nestale brojeve
-    lista_brojeva_trenutnog_frejma = utils.pronadji_nestale_brojeve_i_definisi_trenutne(lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height )
+    else:
+        #definisemo ostale atribute trenutnog frejma iiiiii nalazimo nestale brojeve
+
+        lista_brojeva_trenutnog_frejma = utils.pronadji_nestale_brojeve_i_definisi_trenutne(test_brojevi_slika ,lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height )
+
+        lista_brojeva_trenutnog_frejma = utils.pronadji_novonastale_brojeve(lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height )
+
+        lista_brojeva_predhodnog_frejma = lista_brojeva_trenutnog_frejma
+
+        rezultat = utils.azurirajRezultat(rezultat, zelena_linija,plava_linija,lista_brojeva_trenutnog_frejma)
 
 
-    plt.imshow(test_brojevi_slika)
-    plt.show()
 
+print("Konacni rezultat je : " + str(rezultat))
 
 
 
