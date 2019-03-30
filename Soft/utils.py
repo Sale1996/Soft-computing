@@ -343,8 +343,8 @@ def kreiraj_brojeve_trenutnog_frejma (slike_i_kordinate_frejma, ann):
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
         obradjena_slika = cv2.erode(obradjena_slika, kernel, iterations=2)
 
-       # plt.imshow(obradjena_slika, 'gray')
-       # plt.show()
+        #plt.imshow(obradjena_slika, 'gray')
+        #plt.show()
 
         #pronalazenje vrednosti cifre koja se nalazi na slici
         obradjena_slika = obradjena_slika.reshape(1, 784)
@@ -425,6 +425,7 @@ def pronadji_nestale_brojeve_i_definisi_trenutne (slika, lista_predhodnog, lista
 
         #ukoliko nije nista od toga onda ga je sigurno progutao neki broj i sada trazimo
         #najmanje euklidsko rastojanje i u njegovu listu smestamo nas broj...
+        '''
         najblizi_broj = lista_trenutnog[0]
         najblize_rastojanje = distance.euclidean(broj_iz_predhodnog.kordinate_sredisnje_tacke, lista_trenutnog[0].kordinate_sredisnje_tacke)
 
@@ -446,7 +447,7 @@ def pronadji_nestale_brojeve_i_definisi_trenutne (slika, lista_predhodnog, lista
 
       #  print('Ovaj broj ne postoji nigde, a vrednost mu je : ' + str(broj_iz_predhodnog.vrednost) + " a kordinate : " + str(broj_iz_predhodnog.kordinate_sredisnje_tacke))
 
-
+        '''
     return lista_trenutnog
 
 
@@ -467,7 +468,7 @@ def pronadji_novonastale_brojeve(lista_predhodnog, lista_trenutnog, zelena_linij
              continue
 
         #ukoliko je tek usao nista ne radimo
-        if(broj_iz_predhodnog.kordinate_sredisnje_tacke[1] < 40):
+        if(broj_iz_trenutnog.kordinate_sredisnje_tacke[1] < 40):
             #znaci da je broj tek upao te onda je to super
             nova_lista_trenutnog.append(broj_iz_trenutnog)
             continue
@@ -476,6 +477,7 @@ def pronadji_novonastale_brojeve(lista_predhodnog, lista_trenutnog, zelena_linij
 
         #nova_lista_trenutnog.append(broj_iz_trenutnog)
         #onda mora da je ovaj broj pojeden pa trazimo broj koji ga je pojeo i izbacujemo ovaj nas iz liste
+        '''
         najblizi_broj = lista_trenutnog[0]
         najblize_rastojanje = distance.euclidean(broj_iz_trenutnog.kordinate_sredisnje_tacke,
                                                  lista_trenutnog[0].kordinate_sredisnje_tacke)
@@ -498,7 +500,7 @@ def pronadji_novonastale_brojeve(lista_predhodnog, lista_trenutnog, zelena_linij
                 broj_iz_trenutnog.kordinate_sredisnje_tacke[1]))
 
 
-
+'''
     return nova_lista_trenutnog
 
 
@@ -506,6 +508,7 @@ def azurirajRezultat(rezultat, zelena_linija,plava_linija,lista_brojeva_trenutno
 
     for broj in lista_brojeva_trenutnog_frejma:
 
+        #prava zelene linije
         y_prave_za_x_tacke_zelena_linija = ((zelena_linija.druga_tacka[1] -
                                              zelena_linija.prva_tacka[1]) / (
                 zelena_linija.druga_tacka[0] -
@@ -514,6 +517,7 @@ def azurirajRezultat(rezultat, zelena_linija,plava_linija,lista_brojeva_trenutno
                                                        zelena_linija.prva_tacka[0]) + \
                                            zelena_linija.prva_tacka[1]
 
+        #prava palve linije
         y_prave_za_x_tacke_plava_linija = ((plava_linija.druga_tacka[1] -
                                             plava_linija.prva_tacka[1]) / (
                 plava_linija.druga_tacka[0] -
@@ -522,15 +526,19 @@ def azurirajRezultat(rezultat, zelena_linija,plava_linija,lista_brojeva_trenutno
                                                       plava_linija.prva_tacka[0]) + \
                                           plava_linija.prva_tacka[1]
 
+
         if(broj.da_li_je_preslo_sabiranje == False):
-            if (abs(broj.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_plava_linija) < 40):
-                if(broj.kordinate_sredisnje_tacke[0] > plava_linija.druga_tacka[0] and broj.kordinate_sredisnje_tacke[0] < plava_linija.druga_tacka[0]):
-                    rezultat = rezultat + broj.vrednost
+            if (abs(broj.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_plava_linija) < 25):
+                if(broj.kordinate_sredisnje_tacke[0] > plava_linija.druga_tacka[0] and broj.kordinate_sredisnje_tacke[0] < plava_linija.prva_tacka[0]):
+                    rezultat = rezultat + broj.vrednost[0]
+                    broj.da_li_je_preslo_sabiranje=True
 
         if (broj.da_li_je_preslo_oduzimanje == False):
-            if (abs(broj.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_zelena_linija) < 40):
-                if (broj.kordinate_sredisnje_tacke[0] > zelena_linija.druga_tacka[0] and
-                        broj.kordinate_sredisnje_tacke[0] < zelena_linija.druga_tacka[0]):
-                    rezultat = rezultat - broj.vrednost
+            if (abs(broj.kordinate_sredisnje_tacke[1] - y_prave_za_x_tacke_zelena_linija) < 25):
+                if (broj.kordinate_sredisnje_tacke[0] > zelena_linija.druga_tacka[0] and broj.kordinate_sredisnje_tacke[0] < zelena_linija.prva_tacka[0]):
+                    rezultat = rezultat - broj.vrednost[0]
+                    broj.da_li_je_preslo_oduzimanje=True
+
+    print('Rezultatl je:' + str(rezultat))
 
     return rezultat
