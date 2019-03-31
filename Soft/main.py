@@ -8,10 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from keras import models
 
-from scipy.spatial import distance
-
-
-
 
 '''
 
@@ -108,7 +104,7 @@ print("Netacno je " + str(netacno))
 
 
 #ucitan video snimak
-capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft-computing\\Soft\\videos\\video-2.avi')
+capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft-computing\\Soft\\videos\\video-0.avi')
 
 
 broj_frejma = 0
@@ -163,7 +159,13 @@ ista_brojeva_trenutnog_frejma = []
 
 rezultat= 0
 
-for x in range(1, videoLength, 5):
+'''
+
+    ITERACIJA KROZ VIDEO I OSVEZAVANJE REZULTATA
+
+'''
+
+for x in range(1, videoLength, 30):
 
     capture.set(1, x)
 
@@ -176,18 +178,20 @@ for x in range(1, videoLength, 5):
     #ukoliko je prva iteracija onda postavljamo da je lista predhodnog frejma == nasoj trenutnoj
     if(x == 1):
 
+        for predhodni_broj in lista_brojeva_predhodnog_frejma:
+            predhodni_broj.kordinate_prve_tacke = predhodni_broj.kordinate_sredisnje_tacke
+
+
         lista_brojeva_predhodnog_frejma = lista_brojeva_trenutnog_frejma
 
     else:
-        #definisemo ostale atribute trenutnog frejma iiiiii nalazimo nestale brojeve
 
-        lista_brojeva_trenutnog_frejma = utils.pronadji_nestale_brojeve_i_definisi_trenutne(test_brojevi_slika ,lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height )
+        paket = utils.osvezi_rezultat(test_brojevi_slika ,lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height , rezultat , x)
 
-        lista_brojeva_trenutnog_frejma = utils.pronadji_novonastale_brojeve(lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height )
+        lista_brojeva_trenutnog_frejma = paket[0]
+        rezultat = paket[1]
 
         lista_brojeva_predhodnog_frejma = lista_brojeva_trenutnog_frejma
-
-        rezultat = utils.azurirajRezultat(rezultat, zelena_linija,plava_linija,lista_brojeva_trenutnog_frejma)
 
 
 

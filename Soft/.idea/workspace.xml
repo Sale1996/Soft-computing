@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="d5a88d22-9ae3-40f5-88f4-7387d2c03a58" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/klase.py" beforeDir="false" afterPath="$PROJECT_DIR$/klase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/videos/out.txt" beforeDir="false" afterPath="$PROJECT_DIR$/videos/out.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/videos/res.txt" beforeDir="false" afterPath="$PROJECT_DIR$/videos/res.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/videos/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/videos/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,8 +53,8 @@
     <session id="-1044782793">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="32" />
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="35" />
+          <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.10" value="8" />
           <entry key="project.open.time.11" value="3" />
           <entry key="project.open.time.12" value="1" />
@@ -60,29 +65,29 @@
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.7" value="3" />
-          <entry key="project.open.time.8" value="6" />
-          <entry key="project.open.time.9" value="5" />
-          <entry key="project.opened" value="33" />
+          <entry key="project.open.time.8" value="7" />
+          <entry key="project.open.time.9" value="6" />
+          <entry key="project.opened" value="36" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="16469" />
+          <entry key="py" value="20095" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="16469" />
+          <entry key="Python" value="20095" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="14" />
+          <entry key="py" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="14" />
+          <entry key="Python" value="16" />
         </counts>
       </usages-collector>
     </session>
@@ -92,16 +97,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="387">
-              <caret line="344" lean-forward="true" selection-start-line="344" selection-end-line="344" />
+            <state relative-caret-position="392">
+              <caret line="389" column="81" selection-start-line="389" selection-start-column="81" selection-end-line="389" selection-end-column="81" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1553970393702" expanded="true" signature="8620:8621" ph="..." />
-                <marker date="1553970393702" expanded="true" signature="8620:8625" ph="..." />
-                <marker date="1553970393702" expanded="true" signature="10311:10312" ph="..." />
-                <marker date="1553970393702" expanded="true" signature="11656:11657" ph="..." />
-                <marker date="1553970393702" expanded="true" signature="11656:16953" ph="..." />
-                <marker date="1553970393702" expanded="true" signature="17125:19249" ph="..." />
+                <marker date="1554057090223" expanded="true" signature="8575:8576" ph="..." />
+                <marker date="1554057090223" expanded="true" signature="8575:8580" ph="..." />
+                <marker date="1554057090223" expanded="true" signature="10219:10220" ph="..." />
+                <marker date="1554057090223" expanded="true" signature="11494:13595" ph="..." />
               </folding>
             </state>
           </provider>
@@ -110,12 +113,21 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="183" column="54" lean-forward="true" selection-start-line="183" selection-end-line="184" />
+            <state relative-caret-position="-150">
+              <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1550409832061" expanded="true" signature="235:278" ph="..." />
+                <marker date="1554058576258" expanded="true" signature="198:240" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/videos/test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="392">
+              <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
             </state>
           </provider>
         </entry>
@@ -123,12 +135,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/klase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1000">
-              <caret line="40" column="19" selection-start-line="40" selection-start-column="19" selection-end-line="40" selection-end-column="19" />
+            <state relative-caret-position="1517">
+              <caret line="73" column="27" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="27" />
               <folding>
-                <marker date="1550404920973" expanded="true" signature="164:165" ph="..." />
-                <marker date="1550404920973" expanded="true" signature="695:696" ph="..." />
-                <marker date="1550404920973" expanded="true" signature="695:701" ph="..." />
+                <marker date="1554056427552" expanded="true" signature="158:159" ph="..." />
+                <marker date="1554056427552" expanded="true" signature="1377:1378" ph="..." />
+                <marker date="1554056427552" expanded="true" signature="1377:1383" ph="..." />
               </folding>
             </state>
           </provider>
@@ -156,8 +168,12 @@
       <find>_Broj__</find>
       <find>ne</find>
       <find>print</find>
-      <find>plt.show()</find>
       <find>imshow</find>
+      <find>len</find>
+      <find>plt.show()</find>
+      <find>linspace</find>
+      <find>da_li_ce_dodaci_liniju</find>
+      <find>da_li_ce_dotaci_liniju</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -166,13 +182,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/videos/test.py" />
         <option value="$PROJECT_DIR$/klase.py" />
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="width" value="960" />
     <option name="height" value="1080" />
   </component>
@@ -202,6 +219,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -222,11 +240,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../PSW/jos bolji soft/SoftComputing-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/videos/test.py" />
     <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="RunDashboard">
@@ -241,7 +258,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.test">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Soft" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -255,6 +272,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Soft" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/videos" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/videos/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -287,9 +325,11 @@
     <list>
       <item itemvalue="Python.main" />
       <item itemvalue="Python.utils" />
+      <item itemvalue="Python.test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python.utils" />
       </list>
@@ -318,7 +358,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="1942" height="1102" extended-state="7" />
+    <frame x="-11" y="-11" width="1942" height="1102" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0068965517" />
@@ -326,8 +366,8 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32925472" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.38153505" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.38820913" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32369298" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.52391547" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32925472" />
@@ -355,8 +395,8 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="lista_brojeva_trenutnog_frejma[0].pomeraj_po_y_osi" />
-        <watch expression="lista_brojeva_trenutnog_frejma[1]" />
+        <watch expression="__py_debug_temp_var_640546123" />
+        <watch expression="broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[0]" />
       </configuration>
     </watches-manager>
   </component>
@@ -424,39 +464,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="387">
-          <caret line="344" lean-forward="true" selection-start-line="344" selection-end-line="344" />
+        <state relative-caret-position="392">
+          <caret line="389" column="81" selection-start-line="389" selection-start-column="81" selection-end-line="389" selection-end-column="81" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1553970393702" expanded="true" signature="8620:8621" ph="..." />
-            <marker date="1553970393702" expanded="true" signature="8620:8625" ph="..." />
-            <marker date="1553970393702" expanded="true" signature="10311:10312" ph="..." />
-            <marker date="1553970393702" expanded="true" signature="11656:11657" ph="..." />
-            <marker date="1553970393702" expanded="true" signature="11656:16953" ph="..." />
-            <marker date="1553970393702" expanded="true" signature="17125:19249" ph="..." />
+            <marker date="1554057090223" expanded="true" signature="8575:8576" ph="..." />
+            <marker date="1554057090223" expanded="true" signature="8575:8580" ph="..." />
+            <marker date="1554057090223" expanded="true" signature="10219:10220" ph="..." />
+            <marker date="1554057090223" expanded="true" signature="11494:13595" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/videos/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/klase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1000">
-          <caret line="40" column="19" selection-start-line="40" selection-start-column="19" selection-end-line="40" selection-end-column="19" />
+        <state relative-caret-position="1517">
+          <caret line="73" column="27" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="27" />
           <folding>
-            <marker date="1550404920973" expanded="true" signature="164:165" ph="..." />
-            <marker date="1550404920973" expanded="true" signature="695:696" ph="..." />
-            <marker date="1550404920973" expanded="true" signature="695:701" ph="..." />
+            <marker date="1554056427552" expanded="true" signature="158:159" ph="..." />
+            <marker date="1554056427552" expanded="true" signature="1377:1378" ph="..." />
+            <marker date="1554056427552" expanded="true" signature="1377:1383" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="183" column="54" lean-forward="true" selection-start-line="183" selection-end-line="184" />
+        <state relative-caret-position="-150">
+          <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1550409832061" expanded="true" signature="235:278" ph="..." />
+            <marker date="1554058576258" expanded="true" signature="198:240" ph="..." />
           </folding>
         </state>
       </provider>
