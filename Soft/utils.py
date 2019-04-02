@@ -127,15 +127,11 @@ def konvertuj_sliku_u_sivu(slika):
 def pronadji_plavu_liniju(slika):
 
     hsv = cv2.cvtColor(slika, cv2.COLOR_BGR2HSV)
-
     # radimo dilaciju i eroziju kako bi izdvojili liniju
     slika_plava = cv2.inRange(hsv, (100, 25, 25), (140, 255, 255))
-
-
     slika_plava = 255 - slika_plava
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
-
     slika_plava = cv2.erode(slika_plava, kernel, iterations=1)
 
 
@@ -147,8 +143,6 @@ def pronadji_zelenu_liniju(slika):
     hsv = cv2.cvtColor(slika, cv2.COLOR_BGR2HSV)
     #radimo dilaciju i eroziju kako bi izdvojili liniju
     slika_zelena = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
-
-
     slika_zelena= 255 - slika_zelena
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
@@ -290,8 +284,8 @@ def pronadji_brojeve(slika, zelena_linija, plava_linija):
     #dobijanje regiona
     origano, regioni = select_roi(slika, img_bin, zelena_linija, plava_linija)
 
-    #plt.imshow(origano)
-    #plt.show()
+    plt.imshow(origano)
+    plt.show()
 
     brojevi_za_neuronsku = []
 
@@ -377,7 +371,7 @@ def osvezi_rezultat (slika, lista_predhodnog_frejma, lista_trenutnog_frejma, zel
 
     for broj_iz_trenutnog_frejma in lista_trenutnog_frejma:
         #samo prve 2 iteracije ne gledamo da bude u granicama od 100 piksela sa x ili y strane!
-        if(broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] == -1 and (broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[0] <=100 or broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[1]<=100 or x < 150)):
+        if(broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] == -1 and (broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[0] <=100 or broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[1]<=100)): #or x < 150
             broj_iz_trenutnog_frejma.kordinate_prve_tacke = broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke
 
         elif(broj_iz_trenutnog_frejma.kordinate_druge_tacke[0] == -1 and broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] != -1):
