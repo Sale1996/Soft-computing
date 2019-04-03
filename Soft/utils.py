@@ -284,8 +284,8 @@ def pronadji_brojeve(slika, zelena_linija, plava_linija):
     #dobijanje regiona
     origano, regioni = select_roi(slika, img_bin, zelena_linija, plava_linija)
 
-    plt.imshow(origano)
-    plt.show()
+    #plt.imshow(origano)
+    #plt.show()
 
     brojevi_za_neuronsku = []
 
@@ -350,7 +350,7 @@ def kreiraj_brojeve_trenutnog_frejma (slike_i_kordinate_frejma, ann):
         #y = y + h/2
         y_kordinata_sredisnje_tacke = round(slike_i_kordinate_frejma[x][1][1] + slike_i_kordinate_frejma[x][1][3]/2)
 
-        broj = klase.Broj(vrednost, [x_kordinata_sredisnje_tacke, y_kordinata_sredisnje_tacke], False, False, [])
+        broj = klase.Broj(vrednost, [x_kordinata_sredisnje_tacke, y_kordinata_sredisnje_tacke])
 
         brojevi.append(broj)
 
@@ -370,8 +370,8 @@ def osvezi_rezultat (slika, lista_predhodnog_frejma, lista_trenutnog_frejma, zel
 
 
     for broj_iz_trenutnog_frejma in lista_trenutnog_frejma:
-        #samo prve 2 iteracije ne gledamo da bude u granicama od 100 piksela sa x ili y strane!
-        if(broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] == -1 and (broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[0] <=100 or broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[1]<=100)): #or x < 150
+        #samo prvih par iteracija ne gledamo da bude u granicama od 100 piksela sa x ili y strane!
+        if(broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] == -1 and (broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[0] <=100 or broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[1]<=100 or x < 150)): #
             broj_iz_trenutnog_frejma.kordinate_prve_tacke = broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke
 
         elif(broj_iz_trenutnog_frejma.kordinate_druge_tacke[0] == -1 and broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] != -1):

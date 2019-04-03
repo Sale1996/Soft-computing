@@ -104,7 +104,7 @@ print("Netacno je " + str(netacno))
 
 
 #ucitan video snimak
-capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft-computing\\Soft\\videos\\video-0.avi')
+capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft\\Soft-computing\\Soft\\videos\\video-5.avi')
 
 
 broj_frejma = 0
@@ -114,8 +114,8 @@ capture.set(1, broj_frejma)
 ret_val, frame = capture.read()
 
 
-plt.imshow(frame)
-plt.show()
+#plt.imshow(frame)
+#plt.show()
 
 
 '''
