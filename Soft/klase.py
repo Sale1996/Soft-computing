@@ -70,7 +70,7 @@ class Broj :
         y_prave_kretanja_broja_2 = ((broj.kordinate_druge_tacke[1] - broj.kordinate_prve_tacke[1]) / (
                 broj.kordinate_druge_tacke[0] - broj.kordinate_prve_tacke[0])) * (100 - broj.kordinate_prve_tacke[0]) + broj.kordinate_prve_tacke[1]
 
-        if (abs(y_prave_kretanja_broja_1 - y_prave_kretanja_broja_2) < 5):
+        if (abs(y_prave_kretanja_broja_1 - y_prave_kretanja_broja_2) < 2):
             return True
         else:
             return False
