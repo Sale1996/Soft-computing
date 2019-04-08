@@ -357,7 +357,7 @@ def kreiraj_brojeve_trenutnog_frejma (slike_i_kordinate_frejma, ann):
 
     return brojevi
 
-def osvezi_rezultat (slika, lista_predhodnog_frejma, lista_trenutnog_frejma, zelena_linija, plava_linija, sirina_frejma, visina_frejma, rezultat , x):
+def osvezi_rezultat (slika, lista_predhodnog_frejma, lista_trenutnog_frejma, zelena_linija, plava_linija, sirina_frejma, visina_frejma, rezultat , x, lista_izracunatih_brojeva):
 
     for broj_iz_trenutnog_frejma in lista_trenutnog_frejma:
         #za svaki broj trenutnog frejma gledamo da li je tek uleteo ili je postojao u predodnom frejmu...
@@ -371,12 +371,27 @@ def osvezi_rezultat (slika, lista_predhodnog_frejma, lista_trenutnog_frejma, zel
 
     for broj_iz_trenutnog_frejma in lista_trenutnog_frejma:
         #samo prvih par iteracija ne gledamo da bude u granicama od 100 piksela sa x ili y strane!
-        if(broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] == -1 and (broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[0] <=100 or broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke[1]<=100 or x < 150)): #
+        if(broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] == -1 ): #
             broj_iz_trenutnog_frejma.kordinate_prve_tacke = broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke
 
         elif(broj_iz_trenutnog_frejma.kordinate_druge_tacke[0] == -1 and broj_iz_trenutnog_frejma.kordinate_prve_tacke[0] != -1):
+
+
+
             #sada upisuejmo kordinate i u ovaj atribut, pa zatim racunamo jednacinu prave i proveravamo da li sece neku od linija...
             broj_iz_trenutnog_frejma.kordinate_druge_tacke = broj_iz_trenutnog_frejma.kordinate_sredisnje_tacke
+
+            # sada moramo da vidimo da li je taj broj vec izracunat... ukoliko jeste ne radimo nista, ukoliko nije
+            # onda osvezavamo rezultat i ubacujemo ga u listu izracunatih brojeva...
+            izracunat_broj = False
+            for broj in lista_izracunatih_brojeva:
+                if (broj.da_li_je_u_izracunatim_brojevima(broj_iz_trenutnog_frejma)):
+                    izracunat_broj = True
+                    break
+
+            if (izracunat_broj):
+                continue
+
 
             if(plava_linija.da_li_ce_dotaci_liniju(broj_iz_trenutnog_frejma.kordinate_prve_tacke, broj_iz_trenutnog_frejma.kordinate_druge_tacke)):
                 rezultat = rezultat + broj_iz_trenutnog_frejma.vrednost[0]
@@ -384,6 +399,7 @@ def osvezi_rezultat (slika, lista_predhodnog_frejma, lista_trenutnog_frejma, zel
             if(zelena_linija.da_li_ce_dotaci_liniju(broj_iz_trenutnog_frejma.kordinate_prve_tacke, broj_iz_trenutnog_frejma.kordinate_druge_tacke)):
                 rezultat = rezultat - broj_iz_trenutnog_frejma.vrednost[0]
 
+            lista_izracunatih_brojeva.append(broj_iz_trenutnog_frejma)
 
 
-    return [lista_trenutnog_frejma,rezultat]
+    return [lista_trenutnog_frejma,rezultat, lista_izracunatih_brojeva]

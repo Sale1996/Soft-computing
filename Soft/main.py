@@ -104,7 +104,7 @@ print("Netacno je " + str(netacno))
 
 
 #ucitan video snimak
-capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft\\Soft-computing\\Soft\\videos\\video-5.avi')
+capture = cv2.VideoCapture('C:\\Users\\Admin\\Desktop\\soft projekat\\Soft\\Soft-computing\\Soft\\videos\\video-9.avi')
 
 
 broj_frejma = 0
@@ -165,6 +165,8 @@ rezultat= 0
 
 '''
 
+lista_izracunatih_brojeva = []
+
 for x in range(1, videoLength, 30):
 
     capture.set(1, x)
@@ -186,10 +188,11 @@ for x in range(1, videoLength, 30):
 
     else:
 
-        paket = utils.osvezi_rezultat(test_brojevi_slika ,lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height , rezultat , x)
+        paket = utils.osvezi_rezultat(test_brojevi_slika ,lista_brojeva_predhodnog_frejma, lista_brojeva_trenutnog_frejma, zelena_linija, plava_linija, width, height , rezultat , x, lista_izracunatih_brojeva)
 
         lista_brojeva_trenutnog_frejma = paket[0]
         rezultat = paket[1]
+        lista_izracunatih_brojeva = paket[2]
 
         lista_brojeva_predhodnog_frejma = lista_brojeva_trenutnog_frejma
 

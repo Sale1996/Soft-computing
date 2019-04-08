@@ -60,3 +60,17 @@ class Broj :
                 return True
             else:
                 return False
+
+
+    def da_li_je_u_izracunatim_brojevima (self, broj):
+
+        y_prave_kretanja_broja_1 = ((self.kordinate_druge_tacke[1] - self.kordinate_prve_tacke[1]) / (
+                self.kordinate_druge_tacke[0] - self.kordinate_prve_tacke[0])) * (100 - self.kordinate_prve_tacke[0]) + self.kordinate_prve_tacke[1]
+
+        y_prave_kretanja_broja_2 = ((broj.kordinate_druge_tacke[1] - broj.kordinate_prve_tacke[1]) / (
+                broj.kordinate_druge_tacke[0] - broj.kordinate_prve_tacke[0])) * (100 - broj.kordinate_prve_tacke[0]) + broj.kordinate_prve_tacke[1]
+
+        if (abs(y_prave_kretanja_broja_1 - y_prave_kretanja_broja_2) < 5):
+            return True
+        else:
+            return False
